@@ -12,10 +12,25 @@ tns plugin add nativescript-xmpp
 
 ## Usage
 
-
-
-## API
-
+```ts
+import { isIOS } from 'tns-core-modules/platform';
+import { XMPP, Presence } from 'nativescript-xmpp';
+const xmpp = new XMPP({
+  username: 'user',
+  password: 'password',
+  domain: 'localhost',
+  host: isIOS ? 'localhost' : '10.0.2.2'
+});
+xmpp.on('connected', args => {
+  xmpp.login();
+});
+xmpp.on('authenticated', (args: any) => {
+  const presence = new Presence();
+  presence.status = 'Nice';
+  xmpp.send(presence);
+});
+xmpp.connect();
+```
 
 ## License
 
