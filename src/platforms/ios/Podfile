@@ -1,8 +1,4 @@
-use_frameworks!
-
 pod 'XMPPFramework', :git => 'https://github.com/robbiehanson/XMPPFramework.git', :branch => 'master'
-
-
 post_install do |installer|
     installer.pods_project.targets.each do |target|
         if target.name == 'KissXML'

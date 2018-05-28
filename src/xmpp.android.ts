@@ -4,9 +4,13 @@ import {
   PresenceBase,
   PresenceType,
   PresenceOptions,
-  PresenceMode
+  PresenceMode,
+  MessageBase,
+  RosterBase,
+  MessageType
 } from './xmpp.common';
 import { ad } from 'tns-core-modules/utils/utils';
+import { fromObject } from 'tns-core-modules/data/observable/observable';
 declare const org, co;
 export class XMPP extends XMPPBase {
   private manager;
@@ -58,6 +62,52 @@ export class XMPP extends XMPPBase {
       connectionClosedOnError(e: java.lang.Exception) {}
     });
     this.connection.addConnectionListener(connectionListener);
+
+    const chatManager = org.jivesoftware.smack.chat2.ChatManager.getInstanceFor(
+      this.connection
+    );
+    const incomingMessageListener = new org.jivesoftware.smack.chat2.IncomingChatMessageListener(
+      {
+        newIncomingMessage(from, message, chat) {
+          const msg = new Message();
+          msg.body = message.getBody();
+          msg.to = message.getTo().toString();
+          msg.from = from.toString();
+          msg.type = message.getType().toString();
+          owner.notify({
+            eventName: 'incomingMessage',
+            object: fromObject({
+              message: msg,
+              from: from.toString()
+            }),
+            android: { from: from, message: message, chat: chat },
+            ios: null
+          });
+        }
+      }
+    );
+    const outgoingMessageListener = new org.jivesoftware.smack.chat2.OutgoingChatMessageListener(
+      {
+        newOutgoingMessage(to, message, chat) {
+          const msg = new Message();
+          msg.body = message.getBody();
+          msg.to = to.toString();
+          msg.from = message.getFrom().toString();
+          msg.type = message.getType().toString();
+          owner.notify({
+            eventName: 'outgoingMessage',
+            object: fromObject({
+              message: msg,
+              to: to.toString()
+            }),
+            android: { to: to, message: message, chat: chat },
+            ios: null
+          });
+        }
+      }
+    );
+    chatManager.addIncomingListener(incomingMessageListener);
+    chatManager.addOutgoingListener(outgoingMessageListener);
   }
   connect(): void {
     if (this.connection) {
@@ -79,6 +129,8 @@ export class XMPP extends XMPPBase {
     let s;
     if (data instanceof Presence) {
       s = data.presence;
+    } else if (data instanceof Message) {
+      s = data.message;
     } else {
       s = data;
     }
@@ -229,3 +281,61 @@ export class Presence extends PresenceBase {
   }
 }
 
+export class Message extends MessageBase {
+  _options;
+  constructor() {
+    super();
+    this._options = {};
+    this.message = new org.jivesoftware.smack.packet.Message();
+  }
+  set to(jid: string) {
+    this._options.to = jid;
+    try {
+      const j = org.jxmpp.jid.impl.JidCreate.from(jid);
+      this.message.setTo(j);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  set body(body: any) {
+    this._options.body = body;
+    this.message.setBody(body);
+  }
+  set type(type: MessageType) {
+    this._options.type = type;
+    let t;
+    switch (type) {
+      case MessageType.CHAT:
+        t = org.jivesoftware.smack.packet.Message.Type.chat;
+        break;
+      case MessageType.GROUP_CHAT:
+        t = org.jivesoftware.smack.packet.Message.Type.groupchat;
+        break;
+      case MessageType.HEADLINE:
+        t = org.jivesoftware.smack.packet.Message.Type.headline;
+        break;
+      case MessageType.ERROR:
+        t = org.jivesoftware.smack.packet.Message.Type.error;
+        break;
+      default:
+        t = org.jivesoftware.smack.packet.Message.Type.normal;
+        break;
+    }
+    this.message.setType(t);
+  }
+  set from(jid: string) {
+    this._options.from = jid;
+    try {
+      const j = org.jxmpp.jid.impl.JidCreate.from(jid);
+      this.message.setFrom(j);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+}
+
+export class Roster extends RosterBase {
+  constructor() {
+    super();
+  }
+}

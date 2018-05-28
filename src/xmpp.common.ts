@@ -13,7 +13,7 @@ export abstract class XMPPBase extends Observable {
   abstract send(data): void;
 }
 
-export abstract class PresenceBase {
+export class PresenceBase {
   presence: any;
   _options: PresenceOptions;
   constructor(
@@ -60,4 +60,20 @@ export interface XMPPOptions {
   host?: string;
   port?: number;
   resource?: string;
+}
+
+export class MessageBase {
+  message: any;
+}
+
+export enum MessageType {
+  NORMAL = 'normal',
+  CHAT = 'chat',
+  GROUP_CHAT = 'groupchat',
+  HEADLINE = 'headline',
+  ERROR = 'error'
+}
+
+export class RosterBase {
+  roster: any;
 }
