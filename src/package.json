@@ -1,6 +1,6 @@
 {
     "name": "nativescript-xmpp",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "NativeScript XMPP Client",
     "main": "xmpp",
     "typings": "index.d.ts",
