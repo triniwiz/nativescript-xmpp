@@ -18,12 +18,12 @@ export declare enum PresenceType {
     SUBSCRIBED = "subscribed",
     UNAVAILABLE = "unavailable",
     UNSUBSCRIBE = "unsubscribe",
-    UNSUBSCRIBED = "unsubscribed",
+    UNSUBSCRIBED = "unsubscribed"
 }
 export declare enum PresenceMode {
     AWAY = "away",
     CHAT = "chat",
     DND = "dnd",
     AVAILABLE = "available",
-    XA = "xa",
+    XA = "xa"
 }

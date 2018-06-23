@@ -15,4 +15,6 @@ export interface ConnectionOptions {
     host?: string;
     port?: number;
     resource?: string;
+    sasl?: Array<string>;
+    compression: boolean;
 }

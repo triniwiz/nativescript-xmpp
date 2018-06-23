@@ -6,5 +6,5 @@ export declare enum MessageType {
     CHAT = "chat",
     GROUP_CHAT = "groupchat",
     HEADLINE = "headline",
-    ERROR = "error",
+    ERROR = "error"
 }
