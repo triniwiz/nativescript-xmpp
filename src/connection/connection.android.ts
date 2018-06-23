@@ -13,6 +13,26 @@ export class Connection extends ConnectionBase {
         this.manager = co.fitcom.fancyxmpp.Manager.getInstance();
         const opts = new co.fitcom.fancyxmpp.ConnectionOptions();
 
+        if (!options.username) {
+            throw new Error('Must define a username');
+        }
+
+        opts.setUsername(options.username);
+
+
+        if (!options.password) {
+            throw new Error('Must define a password');
+        }
+
+
+        opts.setPassword(options.password);
+
+
+        if (!options.domain) {
+            throw new Error('Must define a domain');
+        }
+
+        opts.setDomain(options.domain);
 
         if (options.host) {
             opts.setHost(options.host);
