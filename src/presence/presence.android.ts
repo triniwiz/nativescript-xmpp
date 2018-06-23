@@ -45,11 +45,6 @@ export class Presence extends PresenceBase {
           org.jivesoftware.smack.packet.Presence.Type.unsubscribe
         );
         break;
-      case PresenceType.UNSUBSCRIBE:
-        this.presence = new org.jivesoftware.smack.packet.Presence(
-          org.jivesoftware.smack.packet.Presence.Type.unsubscribe
-        );
-        break;
       case PresenceType.UNSUBSCRIBED:
         this.presence = new org.jivesoftware.smack.packet.Presence(
           org.jivesoftware.smack.packet.Presence.Type.unsubscribed
